@@ -39,6 +39,6 @@ learning_rate = CoScheduler(
 ```
 <video width="320" height="240" controls>
     
-  <source src=https://github.com/cubecloud/sb3-rllab/main/tests/LunarLander-v2_250702-185132.mp4" type="video/mp4">
+  <source src="https://raw.githubusercontent.com/cubecloud/sb3-rllab/main/tests/LunarLander-v2_250702-185132.mp4" type="video/mp4">
   Your browser does not support the video tag.
 </video>
