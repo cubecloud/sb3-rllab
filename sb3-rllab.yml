@@ -11,4 +11,6 @@ dependencies:
   - typing-extensions>=3.7.4
   - nbformat
   - ipykernel
+  - pip:
+      - git+https://github.com/cubecloud/sb3-rllab.git
 prefix: /home/cubecloud/anaconda3/envs/sb3-rllab
