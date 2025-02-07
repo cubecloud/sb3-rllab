@@ -26,7 +26,7 @@ A utility for managing the learning rate during model training. Example usage:
 
 ```python
 total_timesteps = 20_000_000
-learning_rate = CoSheduler(
+learning_rate = CoScheduler(
     warmup=int(total_timesteps // 20),
     stable_warmup=False,
     floor_learning_rate=1e-7,
