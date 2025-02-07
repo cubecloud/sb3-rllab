@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='sb3-rllab',
+    name='sb3_rllab',
     version='0.024',
-    packages=find_packages(include=['envtools.*']),
+    packages=find_packages(include=['sb3_rllab', 'sb3_rllab.*']),
     url='https://github.com/cubecloud/sb3-rllab',
     license='MIT',
     author='cubecloud',
