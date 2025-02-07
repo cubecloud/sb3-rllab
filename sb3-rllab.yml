@@ -1,0 +1,14 @@
+name: sb3-rllab
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pip>=21.0.1
+  - setuptools>=51.0.0
+  - numpy>=1.19.2
+  - stable-baselines3[extra]==2.3.2
+  - gymnasium-all==0.29.1
+  - typing-extensions>=3.7.4
+  - nbformat
+  - ipykernel
+prefix: /home/cubecloud/anaconda3/envs/sb3-rllab
