@@ -36,3 +36,8 @@ learning_rate = CoSheduler(
     epsilon=1,
     pre_warmup_coef=0.03
 )()
+```
+<video width="320" height="240" controls>
+  <source src="your_video_file.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
