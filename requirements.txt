@@ -2,5 +2,5 @@ python>3.9.1
 setuptools>=75.8.0
 numpy~=1.26.4
 gymnasium>=0.29.1
-stable-baselines3~=2.3.2
+stable-baselines3>=2.3.2,<2.6.0a0
 typing-extensions>=3.7.4

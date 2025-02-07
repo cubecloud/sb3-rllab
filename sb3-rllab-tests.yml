@@ -1,4 +1,4 @@
-name: sb3-rllab
+name: sb3-rllab-tests
 channels:
   - conda-forge
   - defaults
@@ -10,6 +10,13 @@ dependencies:
   - nbformat
   - stable-baselines3[extra]>=2.3.2,<2.6.0a0
   - gymnasium-all==0.29.1
+  - typing-extensions>=3.7.4
+  - pandas>=1.1.5,<2.0.0
+  - pytz>=2020.4
+  - tqdm
+  - rich
+  - imageio
+  - pillow
   - pip:
       - git+https://github.com/cubecloud/sb3-rllab.git
-prefix: /home/cubecloud/anaconda3/envs/sb3-rllab
+prefix: /home/cubecloud/anaconda3/envs/sb3-rllab-tests
