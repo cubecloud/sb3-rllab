@@ -25,6 +25,8 @@ A dummy (stub) lock that can be used when you need to create a placeholder inste
 A utility for managing the learning rate during model training. Example usage:
 
 ```python
+from sb3_rllab import CoScheduler
+
 total_timesteps = 20_000_000
 learning_rate = CoScheduler(
     warmup=int(total_timesteps // 20),
