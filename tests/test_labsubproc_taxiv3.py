@@ -2,7 +2,7 @@ import os
 import logging
 import datetime
 
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, DQN
 from stable_baselines3.common.vec_env import DummyVecEnv
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.callbacks import EvalCallback
@@ -34,13 +34,14 @@ if __name__ == "__main__":
     num_envs = 280
     total_timesteps = 30_000_000
 
-    env_id = "LunarLander-v2"
+    env_id = "Taxi-v3"
     env_kwargs = dict(render_mode=None,  # render off
-                      continuous=True,
-                      gravity=-9.8,
-                      enable_wind=True,
-                      wind_power=15.0,
-                      turbulence_power=1.5)
+                      # continuous=True,
+                      # gravity=-9.8,
+                      # enable_wind=True,
+                      # wind_power=15.0,
+                      # turbulence_power=1.5
+                      )
 
     train_vec_env_kwargs = dict(env_id=env_id,
                                 env_kwargs=env_kwargs,
@@ -66,14 +67,12 @@ if __name__ == "__main__":
 
     exp_id = f'{datetime.datetime.now(TZ).strftime("%y%d%m-%H%M%S")}'
     main_path = "."
-    n_steps = 200
-    model = PPO("MlpPolicy",
+    n_steps = 1000
+    model = DQN("MlpPolicy",
                 train_vec_env,
                 verbose=1,
                 device="auto",
-                n_steps=n_steps,
                 batch_size=int((num_envs * n_steps) // 5),
-                n_epochs=10,
                 learning_rate=CoScheduler(warmup=int(total_timesteps // 20),
                                           stable_warmup=False,
                                           floor_learning_rate=1e-6,
@@ -83,7 +82,6 @@ if __name__ == "__main__":
                                           epsilon=1,
                                           pre_warmup_coef=0.03
                                           )(),
-                ent_coef=0.01,
                 gamma=0.99,
                 stats_window_size=n_steps,
                 seed=seed,
@@ -118,7 +116,7 @@ if __name__ == "__main__":
 
     # Load the model
     eval_vec_env = make_vec_env(**eval_vec_env_kwargs)
-    model = PPO.load(path=os.path.join(path_filename, 'best_model', 'best_model.zip'), env=eval_vec_env, device="cpu")
+    model = DQN.load(path=os.path.join(path_filename, 'best_model', 'best_model.zip'), env=eval_vec_env, device="cpu")
     env = model.get_env()
 
     # Test the model

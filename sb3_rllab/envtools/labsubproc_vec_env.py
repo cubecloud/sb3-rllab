@@ -198,10 +198,12 @@ class ThreadedEnvWrapper(gym.Env):
         for future in concurrent.futures.as_completed(futures):
             future.result()
 
-    def _env_method_env(self, env_idx: int, method_name: str, args: List[Any], kwargs: Dict[str, Any]) -> Tuple[int, Any]:
+    def _env_method_env(self, env_idx: int, method_name: str, args: List[Any], kwargs: Dict[str, Any]) -> Tuple[
+        int, Any]:
         return env_idx, getattr(self.envs[env_idx].unwrapped, method_name)(*args, **kwargs)
 
-    def env_method(self, method_name: str, args: List[Any], kwargs: Dict[str, Any], indices: List[int]) -> Dict[int, Any]:
+    def env_method(self, method_name: str, args: List[Any], kwargs: Dict[str, Any], indices: List[int]) -> Dict[
+        int, Any]:
         futures = []
         for env_idx in indices:
             futures.append(self.executor.submit(self._env_method_env, env_idx, method_name, args, kwargs))
@@ -365,6 +367,11 @@ class LabSubprocVecEnv(VecEnv):
             self.n_processes = max(1, mp.cpu_count() - 2)
         else:
             self.n_processes = n_processes
+
+        msg = (f'{use_period.capitalize()} PPO model with #{self.num_envs} environments. '
+               f'Using cpu_max-{self.n_processes} or 1 processor(s)')
+        print(msg, flush=True)
+        logger.info(f'{self.__class__.__name__}: {msg}')
 
         self.env_indices_per_process = calculate_indices(self.num_envs, self.n_processes)
 
