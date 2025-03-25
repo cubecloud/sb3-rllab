@@ -11,6 +11,7 @@ This project provides a set of tools for working with the **Stable Baselines 3**
 ### 1. LabSubprocVecEnv
 
 An enhanced version of the standard `SubProcVecEnv` class that allows you to run thousands of environments simultaneously in multiprocessing mode. It also supports the use of `threading.RLock()` in threading mode (see the next tool).
+![speed_check.png](speed_check.png)
 
 ### 2. SMpLock and SThLock
 
@@ -39,6 +40,3 @@ learning_rate = CoScheduler(
     pre_warmup_coef=0.03
 )()
 ```
-<video width="320" height="240" controls>   
-  <source src="https://raw.githubusercontent.com/cubecloud/sb3-rllab/main/tests/LunarLander-v2_250702-185132.mp4" type="video/mp4">
-</video>
