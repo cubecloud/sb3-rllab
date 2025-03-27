@@ -198,10 +198,12 @@ class ThreadedEnvWrapper(gym.Env):
         for future in concurrent.futures.as_completed(futures):
             future.result()
 
-    def _env_method_env(self, env_idx: int, method_name: str, args: List[Any], kwargs: Dict[str, Any]) -> Tuple[int, Any]:
+    def _env_method_env(self, env_idx: int, method_name: str, args: List[Any], kwargs: Dict[str, Any]) -> Tuple[
+        int, Any]:
         return env_idx, getattr(self.envs[env_idx].unwrapped, method_name)(*args, **kwargs)
 
-    def env_method(self, method_name: str, args: List[Any], kwargs: Dict[str, Any], indices: List[int]) -> Dict[int, Any]:
+    def env_method(self, method_name: str, args: List[Any], kwargs: Dict[str, Any], indices: List[int]) -> Dict[
+        int, Any]:
         futures = []
         for env_idx in indices:
             futures.append(self.executor.submit(self._env_method_env, env_idx, method_name, args, kwargs))
@@ -229,7 +231,7 @@ class ThreadedEnvWrapper(gym.Env):
 
 def _worker(remote: mp.connection.Connection, parent_remote: mp.connection.Connection,
             envs_fn_lst_wrapper: CloudpickleWrapper, process_env_indices: List[int],
-            use_threads=False, unique_name='train') -> None:
+            use_threads=False, unique_name='train', use_fakelock=False) -> None:
     if use_threads:
         """
         we  need in this case threading.RLock for some custom environments, 
@@ -251,7 +253,10 @@ def _worker(remote: mp.connection.Connection, parent_remote: mp.connection.Conne
         we don't need in this case threading.RLock for MpCacheManager cos all environments method's
         called sequentially. We just need FakeRlock with singleton wrapper
         """
-        _lock = SThLock(FakeRLock(), unique_name=f'{unique_name}_rlock')
+        if use_fakelock:
+            _lock = SThLock(FakeRLock(), unique_name=f'{unique_name}_rlock')
+        else:
+            _lock = SThLock(threading.RLock(), unique_name=f'{unique_name}_rlock')
         use_wrapper = EnvWrapper
 
     parent_remote.close()
@@ -322,8 +327,7 @@ class LabSubprocVecEnv(VecEnv):
 
     def __init__(self, env_fns: List[Callable[[], gym.Env]], start_method: Optional[str] = None,
                  n_processes: Optional[int] = None, process_shared_objs: Optional[Dict] = None,
-                 use_threads: bool = False, use_period: str = 'train',
-                 seed: int = 42):
+                 use_threads: bool = False, use_period: str = 'train', seed: int = 42, use_fakelock: bool = False):
 
         def calculate_indices(n_envs, n_processes) -> List[List[int]]:
             # Calculate the number of environments per process
@@ -383,7 +387,7 @@ class LabSubprocVecEnv(VecEnv):
             process_env_indices = self.env_indices_per_process[pr_idx]
             envs_lst = [env_fns[i] for i in process_env_indices]
             args = (self.work_remotes[pr_idx], self.remotes[pr_idx], CloudpickleWrapper(envs_lst), process_env_indices,
-                    use_threads, use_period)
+                    use_threads, use_period, use_fakelock)
             # daemon=True: if the main process crashes, we should not cause things to hang
             process = ctx.Process(target=_worker, args=args, daemon=True)  # type: ignore[attr-defined]
             process.start()
