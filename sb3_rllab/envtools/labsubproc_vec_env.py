@@ -24,7 +24,7 @@ from stable_baselines3.common.vec_env.patch_gym import _patch_env
 from concurrent.futures import ThreadPoolExecutor
 import concurrent.futures
 
-__version__ = 0.024
+__version__ = 0.026
 
 logger = mp.get_logger()
 
