@@ -231,7 +231,7 @@ class ThreadedEnvWrapper(gym.Env):
 
 def _worker(remote: mp.connection.Connection, parent_remote: mp.connection.Connection,
             envs_fn_lst_wrapper: CloudpickleWrapper, process_env_indices: List[int],
-            use_threads=False, unique_name='train', use_fakelock=False) -> None:
+            use_threads=False, unique_name='train', use_fakelock=True) -> None:
     if use_threads:
         """
         we  need in this case threading.RLock for some custom environments, 
@@ -327,7 +327,7 @@ class LabSubprocVecEnv(VecEnv):
 
     def __init__(self, env_fns: List[Callable[[], gym.Env]], start_method: Optional[str] = None,
                  n_processes: Optional[int] = None, process_shared_objs: Optional[Dict] = None,
-                 use_threads: bool = False, use_period: str = 'train', seed: int = 42, use_fakelock: bool = False):
+                 use_threads: bool = False, use_period: str = 'train', seed: int = 42, use_fakelock: bool = True):
 
         def calculate_indices(n_envs, n_processes) -> List[List[int]]:
             # Calculate the number of environments per process
